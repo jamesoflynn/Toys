@@ -1,6 +1,9 @@
-import java.io.PrintStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class ThingyTree<T extends Comparable<T>> {
+public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
 	private Thingy<T> head;
 	private float alpha = 0.2f;
@@ -147,8 +150,109 @@ public class ThingyTree<T extends Comparable<T>> {
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public Iterator<Thingy<T>> iterator() {
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+
+	@Override
+	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+		Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
+			@Override
+			public void visit(Thingy<T> thingy) {
+				try {
+					objectOutput.writeObject(thingy);
+				}
+				catch(IOException ioe){}
+			}
+		};
+		flatten(head, wrapper);
+	}
+
+	@Override
+	public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
+
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	public List<Thingy<T>> flatten() {
+		List<Thingy<T>> list = new ArrayList<>();
+		Visitor<Thingy<T>> wrapper = new Visitor<>() {
+			public void visit(Thingy<T> thingy) {
+				list.add(thingy);
+			}
+		};
+		flatten(head, wrapper);
+		return list;
+	}
+
+	private Visitor<Thingy<T>> flatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+		visitor.visit(cursor);
+		if (cursor.left != null) {
+			flatten(cursor.left, visitor);
+		}
+		if (cursor.right != null) {
+			flatten(cursor.right, visitor);
+		}
+		return visitor;
+	}
+
+	public List<Thingy<T>> lhrFlatten() {
+		List<Thingy<T>> list = new ArrayList<>();
+		Visitor<Thingy<T>> wrapper = new Visitor<>() {
+			public void visit(Thingy<T> thingy) {
+				list.add(thingy);
+			}
+		};
+		lhrFlatten(head, wrapper);
+		return list;
+	}
+
+	private Visitor<Thingy<T>> lhrFlatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+		if (cursor.left != null) {
+			lhrFlatten(cursor.left, visitor);
+		}
+		if (cursor.right != null) {
+			lhrFlatten(cursor.right, visitor);
+		}
+		visitor.visit(cursor);
+		return visitor;
+	}
+
+	public List<Thingy<T>> dfFlatten() {
+		List<Thingy<T>> list = new ArrayList<>();
+		Visitor<Thingy<T>> wrapper = new Visitor<>() {
+			public void visit(Thingy<T> thingy) {
+				list.add(thingy);
+			}
+		};
+		dfFlatten(head, wrapper);
+		return list;
+	}
+
+	private Visitor<Thingy<T>> dfFlatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+		visitor.visit(cursor);
+		while (cursor.left != null) {
+			cursor = cursor.left;
+			visitor.visit(cursor);
+		}
+		if (cursor.right != null) {
+			dfFlatten(cursor.right, visitor);
+		}
+		return visitor;
+	}
+
 	public void dump(PrintStream output) {
-		dump(head, output);
+		Visitor<Thingy<T>> wrapper = new Visitor<>() {
+			public void visit(Thingy<T> thingy) {
+				output.print(thingy.toString());
+				output.print(", ");
+			}
+		};
+		flatten(head, wrapper);
 	}
 
 	private void dump(Thingy<T> cursor, PrintStream output) {
