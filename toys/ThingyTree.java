@@ -168,7 +168,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				catch(IOException ioe){}
 			}
 		};
-		flatten(head, wrapper);
+		traverse(head, wrapper);
 	}
 
 	@Override
@@ -185,17 +185,17 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				list.add(thingy);
 			}
 		};
-		flatten(head, wrapper);
+		traverse(head, wrapper);
 		return list;
 	}
 
-	private Visitor<Thingy<T>> flatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+	private Visitor<Thingy<T>> traverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
 		visitor.visit(cursor);
 		if (cursor.left != null) {
-			flatten(cursor.left, visitor);
+			traverse(cursor.left, visitor);
 		}
 		if (cursor.right != null) {
-			flatten(cursor.right, visitor);
+			traverse(cursor.right, visitor);
 		}
 		return visitor;
 	}
@@ -207,16 +207,16 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				list.add(thingy);
 			}
 		};
-		lhrFlatten(head, wrapper);
+		lhrTraverse(head, wrapper);
 		return list;
 	}
 
-	private Visitor<Thingy<T>> lhrFlatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+	private Visitor<Thingy<T>> lhrTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
 		if (cursor.left != null) {
-			lhrFlatten(cursor.left, visitor);
+			lhrTraverse(cursor.left, visitor);
 		}
 		if (cursor.right != null) {
-			lhrFlatten(cursor.right, visitor);
+			lhrTraverse(cursor.right, visitor);
 		}
 		visitor.visit(cursor);
 		return visitor;
@@ -229,18 +229,18 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				list.add(thingy);
 			}
 		};
-		dfFlatten(head, wrapper);
+		dfTraverse(head, wrapper);
 		return list;
 	}
 
-	private Visitor<Thingy<T>> dfFlatten(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+	private Visitor<Thingy<T>> dfTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
 		visitor.visit(cursor);
 		while (cursor.left != null) {
 			cursor = cursor.left;
 			visitor.visit(cursor);
 		}
 		if (cursor.right != null) {
-			dfFlatten(cursor.right, visitor);
+			dfTraverse(cursor.right, visitor);
 		}
 		return visitor;
 	}
@@ -252,7 +252,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				output.print(", ");
 			}
 		};
-		flatten(head, wrapper);
+		traverse(head, wrapper);
 	}
 
 	private void dump(Thingy<T> cursor, PrintStream output) {
