@@ -1,15 +1,16 @@
-import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+package toys;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class ThingyTreeTest {
-
+public class ThingyTreeTest {
 
 	@Test
-	void test() {
+	public void test() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(5));
 		tree.add(new Thingy<Integer>(3));
@@ -25,7 +26,7 @@ class ThingyTreeTest {
 	}
 
 	@Test
-	void testListLikeInsertion() {
+	public void testListLikeInsertion() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(1));
 		tree.add(new Thingy<Integer>(2));
@@ -42,7 +43,7 @@ class ThingyTreeTest {
 	}
 
 	@Test
-	void testAnotherListLikeInsertion() {
+	public void testAnotherListLikeInsertion() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(9));
 		tree.add(new Thingy<Integer>(8));
@@ -58,7 +59,7 @@ class ThingyTreeTest {
 	}
 
 	@Test
-	void testTreeFlattening() {
+	public void testTreeFlattening() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(9));
 		tree.add(new Thingy<Integer>(8));
@@ -83,7 +84,7 @@ class ThingyTreeTest {
 	}
 
 	@Test
-	void testTreeSerialization() {
+	public void testTreeSerialization() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(1));
 		tree.add(new Thingy<Integer>(2));
@@ -99,7 +100,7 @@ class ThingyTreeTest {
 
 
 	@Test
-	void testIterator() {
+	public void testIterator() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(1));
 		tree.add(new Thingy<Integer>(2));

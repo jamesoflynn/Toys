@@ -1,3 +1,5 @@
+package toys;
+
 import java.io.*;
 import java.util.*;
 
@@ -226,7 +228,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
     public List<Thingy<T>> flatten() {
         List<Thingy<T>> list = new ArrayList<>();
-        Visitor<Thingy<T>> wrapper = new Visitor<>() {
+        Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
             public void visit(Thingy<T> thingy) {
                 list.add(thingy);
             }
@@ -248,7 +250,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
     public List<Thingy<T>> lhrFlatten() {
         List<Thingy<T>> list = new ArrayList<>();
-        Visitor<Thingy<T>> wrapper = new Visitor<>() {
+        Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
             public void visit(Thingy<T> thingy) {
                 list.add(thingy);
             }
@@ -270,7 +272,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
     public List<Thingy<T>> dfFlatten() {
         List<Thingy<T>> list = new ArrayList<>();
-        Visitor<Thingy<T>> wrapper = new Visitor<>() {
+        Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
             public void visit(Thingy<T> thingy) {
                 list.add(thingy);
             }
@@ -292,7 +294,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
     }
 
     public void dump(PrintStream output) {
-        Visitor<Thingy<T>> wrapper = new Visitor<>() {
+        Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
             public void visit(Thingy<T> thingy) {
                 output.print(thingy.toString());
                 output.print(", ");

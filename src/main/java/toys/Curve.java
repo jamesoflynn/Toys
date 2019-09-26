@@ -1,3 +1,5 @@
+package toys;
+
 import java.util.List;
 
 public class Curve {

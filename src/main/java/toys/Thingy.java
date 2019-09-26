@@ -1,3 +1,5 @@
+package toys;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
