@@ -1,10 +1,14 @@
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
-public class Thingy<T extends Comparable<T>> {
+public class Thingy<T extends Comparable<T>> implements Externalizable {
 
 	private T theThing;
-	protected Thingy<T> left;
-	protected Thingy<T> right;
-	private int size;
+	transient protected Thingy<T> left;
+	transient protected Thingy<T> right;
+	transient private int size;
 
 	public Thingy() {
 		this.size = 0;
@@ -51,5 +55,15 @@ public class Thingy<T extends Comparable<T>> {
 	protected int weight() {
 		resize();
 		return this.size + 1;
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+
+	}
+
+	@Override
+	public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
+
 	}
 }

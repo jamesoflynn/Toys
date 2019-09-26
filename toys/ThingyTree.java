@@ -1,7 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
@@ -150,8 +148,56 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public Iterator<Thingy<T>> iterator() {
-		return null;
+    public class TraversIterator implements Iterator<T> {
+        Stack<Thingy<T>> stack;
+        Thingy<T> cursor;
+
+        TraversIterator() {
+            stack = new Stack<>();
+            if (head != null) {
+            	stack.push(head);
+			}
+        }
+
+        @Override
+        public boolean hasNext() {
+        	if (stack.size() > 0) {
+				Thingy<T> thingy = stack.peek();
+				if (thingy.left != null && thingy.left != cursor && thingy.right != cursor) {
+					thingy = thingy.left;
+					while (thingy != null) {
+						stack.push(thingy);
+						thingy = thingy.left;
+					}
+					return true;
+				}
+				if (thingy.right != null && thingy.right != cursor) {
+					stack.push(thingy.right);
+					thingy = thingy.right;
+					if (thingy.left != null) {
+						thingy = thingy.left;
+						do {
+							stack.push(thingy);
+							thingy = thingy.left;
+						} while (thingy != null);
+						return true;
+					}
+				}
+				return true;
+			}
+            return false;
+        }
+
+        @Override
+        public T next() {
+        	cursor = stack.peek();
+            return stack.pop().getThingy();
+        }
+
+    }
+
+	public Iterator<T> iterator() {
+        return new TraversIterator();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -163,9 +209,8 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 			@Override
 			public void visit(Thingy<T> thingy) {
 				try {
-					objectOutput.writeObject(thingy);
-				}
-				catch(IOException ioe){}
+					thingy.writeExternal(objectOutput);
+				} catch (IOException ioe) {}
 			}
 		};
 		traverse(head, wrapper);
@@ -252,17 +297,6 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
 				output.print(", ");
 			}
 		};
-		traverse(head, wrapper);
-	}
-
-	private void dump(Thingy<T> cursor, PrintStream output) {
-		if (cursor.left != null) {
-			dump(cursor.left, output);
-		}
-		if (cursor.right != null) {
-			dump(cursor.right, output);
-		}
-		output.print(cursor.toString());
-		output.print(", ");
+		lhrTraverse(head, wrapper);
 	}
 }
