@@ -85,22 +85,6 @@ public class ThingyTreeTest {
 	}
 
 	@Test
-	public void testTreeSerialization() {
-		ThingyTree<Integer> tree = new ThingyTree<>();
-		tree.add(new Thingy<Integer>(1));
-		tree.add(new Thingy<Integer>(2));
-		tree.add(new Thingy<Integer>(3));
-		tree.add(new Thingy<Integer>(4));
-		tree.add(new Thingy<Integer>(5));
-		tree.add(new Thingy<Integer>(6));
-		tree.add(new Thingy<Integer>(7));
-		tree.add(new Thingy<Integer>(8));
-		tree.add(new Thingy<Integer>(9));
-
-	}
-
-
-	@Test
 	public void testIterator() {
 		ThingyTree<Integer> tree = new ThingyTree<>();
 		tree.add(new Thingy<Integer>(1));
