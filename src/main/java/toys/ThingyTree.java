@@ -217,9 +217,7 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
             traverse(head, wrapper);
         }
         catch (Exception e) {
-            if (e instanceof IOException) {
-
-            }
+            throw new IOException(e.getMessage());
         }
     }
 
