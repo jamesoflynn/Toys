@@ -209,19 +209,46 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
     public void writeExternal(ObjectOutput objectOutput) throws IOException {
         Visitor<Thingy<T>> wrapper = new Visitor<Thingy<T>>() {
             @Override
-            public void visit(Thingy<T> thingy) {
-                try {
-                    thingy.writeExternal(objectOutput);
-                } catch (IOException ioe) {
-                }
+            public void visit(Thingy<T> thingy) throws Exception {
+                thingy.writeExternal(objectOutput);
             }
         };
-        traverse(head, wrapper);
+        try {
+            traverse(head, wrapper);
+        }
+        catch (Exception e) {
+            if (e instanceof IOException) {
+
+            }
+        }
     }
 
     @Override
     public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
+        head = new Thingy<>();
+        head.readExternal(objectInput);
+        while (objectInput.available() > 0) {
+            Thingy<T> element = new Thingy<>();
+            element.readExternal(objectInput);
+            rebuild(head, element);
+        }
+    }
 
+    private void rebuild(Thingy<T> cursor, Thingy<T> element) {
+        if (element.compareTo(cursor) < 0) {
+            if (cursor.left == null) {
+                cursor.left = element;
+                return;
+            }
+            rebuild(cursor.left, element);
+        }
+        else if (element.compareTo(cursor) > 0) {
+            if (cursor.right == null) {
+                cursor.right = element;
+                return;
+            }
+            rebuild(cursor.right, element);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -233,11 +260,14 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
                 list.add(thingy);
             }
         };
-        traverse(head, wrapper);
+        try {
+            traverse(head, wrapper);
+        }
+        catch (Exception ignore) {}
         return list;
     }
 
-    private Visitor<Thingy<T>> traverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+    private Visitor<Thingy<T>> traverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) throws Exception {
         visitor.visit(cursor);
         if (cursor.left != null) {
             traverse(cursor.left, visitor);
@@ -255,11 +285,14 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
                 list.add(thingy);
             }
         };
-        lhrTraverse(head, wrapper);
+        try {
+            lhrTraverse(head, wrapper);
+        }
+        catch (Exception ignore) {}
         return list;
     }
 
-    private Visitor<Thingy<T>> lhrTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+    private Visitor<Thingy<T>> lhrTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) throws Exception {
         if (cursor.left != null) {
             lhrTraverse(cursor.left, visitor);
         }
@@ -277,11 +310,14 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
                 list.add(thingy);
             }
         };
-        dfTraverse(head, wrapper);
+         try {
+             dfTraverse(head, wrapper);
+         }
+         catch(Exception ignore){}
         return list;
     }
 
-    private Visitor<Thingy<T>> dfTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) {
+    private Visitor<Thingy<T>> dfTraverse(Thingy<T> cursor, Visitor<Thingy<T>> visitor) throws Exception {
         visitor.visit(cursor);
         while (cursor.left != null) {
             cursor = cursor.left;
@@ -300,6 +336,9 @@ public class ThingyTree<T extends Comparable<T>> implements Externalizable {
                 output.print(", ");
             }
         };
-        lhrTraverse(head, wrapper);
+        try {
+            lhrTraverse(head, wrapper);
+        }
+        catch (Exception ignore) {}
     }
 }

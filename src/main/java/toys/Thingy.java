@@ -10,7 +10,7 @@ public class Thingy<T extends Comparable<T>> implements Externalizable {
 	private T theThing;
 	transient protected Thingy<T> left;
 	transient protected Thingy<T> right;
-	transient private int size;
+	private int size;
 
 	public Thingy() {
 		this.size = 0;
@@ -37,7 +37,7 @@ public class Thingy<T extends Comparable<T>> implements Externalizable {
 		StringBuilder stringbuilder = new StringBuilder();
 		stringbuilder.append("(")
 			.append((left != null ? "L<-" : "N<-"))
-			.append(theThing.toString()).append("[").append(size).append("]")
+			.append(theThing != null ? theThing.toString() : "null").append("[").append(size).append("]")
 			.append((right != null ? "->R" : "->N"))
 			.append(")");
 		return stringbuilder.toString();
@@ -61,11 +61,31 @@ public class Thingy<T extends Comparable<T>> implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
-
+		if (theThing instanceof Externalizable) {
+			String theName = theThing.getClass().getCanonicalName();
+			objectOutput.writeUTF(theName);
+			objectOutput.writeInt(size);
+			((Externalizable)theThing).writeExternal(objectOutput);
+		} else {
+			throw new IOException(theThing.getClass().getName() + " is not externalizable");
+		}
 	}
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-
+		String cname = objectInput.readUTF();
+		Class classT = Class.forName(cname);
+		if (classT != null) {
+			try {
+				this.size = objectInput.readInt();
+				this.theThing = (T) classT.newInstance();
+				((Externalizable)this.theThing).readExternal(objectInput);
+			}
+			catch (InstantiationException | IllegalAccessException | ClassCastException e) {
+				throw new IOException(classT.getName() + " is not externalizable");
+			}
+		} else {
+			throw new IOException(classT.getName() + "is not externalizable");
+		}
 	}
 }
