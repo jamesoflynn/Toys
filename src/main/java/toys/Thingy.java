@@ -73,8 +73,7 @@ public class Thingy<T extends Comparable<T>> implements Externalizable {
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-		String cname = objectInput.readUTF();
-		Class classT = Class.forName(cname);
+		Class classT = Class.forName(objectInput.readUTF());
 		if (classT != null) {
 			try {
 				this.size = objectInput.readInt();
