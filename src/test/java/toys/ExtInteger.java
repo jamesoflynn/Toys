@@ -8,11 +8,11 @@ import java.io.ObjectOutput;
 public class ExtInteger implements Comparable<ExtInteger>, Externalizable {
 
     Integer value;
-    ExtInteger() {
+    public ExtInteger() {
         value = 0;
     }
 
-    ExtInteger(Integer value) {
+    public ExtInteger(Integer value) {
         this.value = value;
     }
 

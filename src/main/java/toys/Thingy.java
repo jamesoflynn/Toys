@@ -4,6 +4,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.lang.reflect.InvocationTargetException;
 
 public class Thingy<T extends Comparable<T>> implements Externalizable {
 
@@ -77,10 +78,11 @@ public class Thingy<T extends Comparable<T>> implements Externalizable {
 		if (classT != null) {
 			try {
 				this.size = objectInput.readInt();
-				this.theThing = (T) classT.newInstance();
+				this.theThing = (T) classT.getConstructor().newInstance();
 				((Externalizable)this.theThing).readExternal(objectInput);
 			}
-			catch (InstantiationException | IllegalAccessException | ClassCastException e) {
+			catch (InvocationTargetException | InstantiationException
+					| IllegalAccessException | ClassCastException | NoSuchMethodException e) {
 				throw new IOException(classT.getName() + " is not externalizable");
 			}
 		} else {
